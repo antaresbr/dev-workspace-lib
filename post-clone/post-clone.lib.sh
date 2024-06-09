@@ -1,25 +1,20 @@
 #!/bin/bash
 
+[ "${BASH_SOURCE[0]}" -ef "$0" ] && echo "$(basename "$0") | ERROR: This file must be sourced" && exit 1
+
 if [ -z "${POST_CLONE_LIB_SH}" ]
 then
 
 POST_CLONE_LIB_SH="loaded"
 
 function pclError() {
-  local msgPrefix="post-clone/lib"
+  local msgPrefix="post-clone-lib"
   if [ $# -gt 1 ]
   then
     msgPrefix="${msgPrefix} | $1"
     shift
   fi
-  if [[ $(type -t wsError) == function ]]
-  then
-    wsError "${msgPrefix}" "$@"
-  else
-    echo ""
-    echo "${msgPrefix} | ERROR: $@"
-    echo ""
-  fi
+  pcsError "${msgPrefix}" "$@"
   exit 1
 }
 

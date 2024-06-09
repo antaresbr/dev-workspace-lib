@@ -31,7 +31,21 @@ function wsWarn() {
 }
 
 
-#-- wserror : Show error message and exit
+#-- wsActionWarn : Show an <pAction> warn
+#   parameters
+#     ...  : Texts to show
+function wsActionWarn() {
+  local msgPrefix="action_${pAction}"
+  if [ $# -gt 1 ]
+  then
+    msgPrefix="${msgPrefix} | $1"
+    shift
+  fi
+  wsWarn "${msgPrefix}" "$@"
+}
+
+
+#-- wsError : Show error message and exit
 #   parameters
 #     ...  : Texts to show
 function wsError() {
@@ -44,6 +58,21 @@ function wsError() {
   echo ""
   echo "${msgPrefix} | ERROR: $@"
   echo ""
+  exit 1
+}
+
+
+#-- wsActionError : Show an <pAction> error message and exit
+#   parameters
+#     ...  : Texts to show
+function wsActionError() {
+  local msgPrefix="action_${pAction}"
+  if [ $# -gt 1 ]
+  then
+    msgPrefix="${msgPrefix} | $1"
+    shift
+  fi
+  wsError "${msgPrefix}" "$@"
   exit 1
 }
 
