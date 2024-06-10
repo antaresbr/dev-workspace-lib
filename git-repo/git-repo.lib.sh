@@ -52,7 +52,7 @@ function gitActionClone() {
 
     if [ -n "${pPostClone}" ]
     then
-      if  [ -f "post-clone/setup.sh" ]
+      if [ ! -L "post-clone/lib" ] && [ -f "post-clone/setup.sh" ] && [ -f "post-clone/setup.local.sh" ]
       then
         post-clone/setup.sh ${pEnvironment}
         [ $? -ne 0 ] && grlError "gitActionClone" "Failed to run post-clone/setup"

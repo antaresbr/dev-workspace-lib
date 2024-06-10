@@ -29,9 +29,10 @@ then
 fi
 if [ ! -d "${WORKSPACE_LIB_DIR}/.git" ]
 then
+  repoToClone="https://github.com/antaresbr/dev-workspace-lib.git"
   echo ""
-  git clone https://github.com/antaresbr/dev-workspace-lib.git "${WORKSPACE_LIB_DIR}"
-  [ $? -ne 0 ] && pcslError "Falha ao copiar projeto workspace-lib\n"
+  git clone "${repoToClone}" "${WORKSPACE_LIB_DIR}"
+  [ $? -ne 0 ] && pcslError "Failed to clone repository, ${repoToClone}"
 fi
 
 libFile="${WORKSPACE_LIB_DIR}/base.lib.sh"
