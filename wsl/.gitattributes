@@ -1,9 +1,0 @@
-*              text=auto eol=lf
-*.bat          text eol=crlf
-*.[bB][aA][tT] text eol=crlf
-*.cmd          text eol=crlf
-*.[cC][mM][dD] text eol=crlf
-*.exe          binary
-*.[eE][xX][eE] binary
-*.ico          binary
-*.[iI][cC][oO] binary
