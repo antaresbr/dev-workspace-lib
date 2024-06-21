@@ -85,7 +85,7 @@ function envVarValidate() {
 
   local varValue="${!zVar}"
 
-  [ -z "${varValue}" ] && [ -n "${oRequired}" ] && envVarValidate_result="envVarValidate | Valor requerido" && return
+  [ -z "${varValue}" ] && [ -n "${oRequired}" ] && envVarValidate_result="envVarValidate | Required value" && return
 
   [ -z "${zValues}" ] && return
 
@@ -98,9 +98,9 @@ function envVarValidate() {
   done
   unset IFS
   envVarValidate_result="
-envVarValidate | Valor inválido: ${varValue}
-  + Variável  : ${zVar}
-  + Permitido : ${zValues}
+envVarValidate | Invalid value: ${varValue}
+  + Variable : ${zVar}
+  + Allowed  : ${zValues}
 "
 }
 

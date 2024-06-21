@@ -215,7 +215,7 @@ function wsTemplateFile() {
     bash -c "${wVars} ; cat << EOF
 $(<${zSource})
 EOF
-"     | sudo tee "${zTarget}" > /dev/null
+"     | tee "${zTarget}" > /dev/null
     [ $? -ne 0 ] && wsError "wsTemplateFile" "Fail to create file, ${zTarget}"
   fi
 }
@@ -233,7 +233,7 @@ function wsCertifyPath() {
 
   if [ ! -d "${zTarget}" ]
   then
-    sudo mkdir "${zTarget}"
+    mkdir "${zTarget}"
     [ $? -ne 0 ] && wsError "wsCertifyPath" "Fail to create directory, ${zTarget}"
   fi
 
