@@ -56,7 +56,7 @@ function wsError() {
     shift
   fi
   echo ""
-  echo "${msgPrefix} | ERROR: $@"
+  echo "${msgPrefix} | ERROR | $@"
   echo ""
   exit 1
 }
@@ -160,9 +160,8 @@ function wsSetMode() {
   if [ -n "${zMode}" ]
   then
     chmod ${zMode} ${zTarget}
-    [ $? -ne 0 ] && wsError "wsSetMode" "Fail to set the file mode, ${zMode} - ${zTarget}"
+    [ $? -eq 0 ] || wsError "wsSetMode" "Fail to set the file mode, ${zMode} - ${zTarget}"
   fi
-  unset _dummy_
 }
 
 
@@ -177,7 +176,7 @@ function wsTemplateFile() {
   local zVars="$1" && shift
 
   [ -z "${zTarget}" ] && wsError "wsTemplateFile" "Parameter not supplied, zTarget"
-  [ -f "${zTarget}" ] && wsMsg "wsTemplateFile" "Fale already exists, ${zTarget}" && return
+  [ -f "${zTarget}" ] && wsMsg "wsTemplateFile" "File already exists, ${zTarget}" && return
 
   [ -z "${zSource}" ] && [ -f "${zTarget}.template" ] && local zSource="${zTarget}.template"
   [ -z "${zSource}" ] && [ -f "${zTarget}.example" ] && local zSource="${zTarget}.example"
@@ -235,10 +234,37 @@ function wsCertifyPath() {
   if [ ! -d "${zTarget}" ]
   then
     sudo mkdir "${zTarget}"
-    [ $? -ne 0 ] && wsError "wsCertifyPath" "Falha to create directory, ${zTarget}"
+    [ $? -ne 0 ] && wsError "wsCertifyPath" "Fail to create directory, ${zTarget}"
   fi
 
   setMode "${zTarget}" "${zMode}"
+}
+
+
+#-- wsCopyFileIfNotExists : Copy file if target does not exists
+#   parameters
+#     zSource : Source file
+#     zTarget : Target file
+#     zMode   : Desired mode
+function wsCopyFileIfNotExists() {
+  local zSource="$1" && shift
+  local zTarget="$1" && shift
+  local zMode="$1" && shift
+
+  [ -z "${zSource}" ] && wsError "wsCopyFileIfNotExists" "Parameter not supplied, zSource"
+  [ ! -f "${zSource}" ] && wsError "wsCopyFileIfNotExists" "Source file not found, ${zSource}"
+
+  [ -z "${zTarget}" ] && wsError "wsCopyFileIfNotExists" "Parameter not supplied, zTarget"
+
+  if [ -f "${zTarget}" ]
+  then
+    echo "  + already exists : $(realpath "${zTarget}")"
+  else
+    cp -v "${zSource}" "${zTarget}"
+    [ $? -ne 0 ] && exit 1
+
+    [ -z "${zMode}" ] || setMode "${zTarget}" "${zMode}"
+  fi
 }
 
 fi

@@ -68,6 +68,7 @@ then
   [ $? -ne 0 ] && pcslError "Fail running git-repo"
 fi
 
+wsSourceFileIfExists "${SCRIPT_DIR}/setup.local.env"
 wsSourceFile "${SCRIPT_DIR}/setup.local.sh"
 
 fi
