@@ -60,6 +60,7 @@ cd "${BASE_DIR}"
 echo ""
 echo "Get SUDO access"
 sudo ls -alF > /dev/null
+[ $? -eq 0 ] || pcslError "Fail to get SUDO access"
 
 if [ -f ".git-repo/git-repo.env.sh" ]
 then
