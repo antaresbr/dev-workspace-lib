@@ -197,7 +197,7 @@ function wsTemplateFile() {
   echo "${wVars}" | grep "^SAIL_USERID=" &> /dev/null
   [ $? -ne 0 ] && local wVars="${wVars}"$'\n'"SAIL_USERID=${SAIL_USERID}"
 
-  if [ "${zSource:(-8)}" == ".example" ]
+  if [ "${zSource:(-8)}" == ".example" ] || [ "${zSource:(-8)}" == "-example" ]
   then
     cp "${zSource}" "${zTarget}"
     [ $? -ne 0 ] && wsError "wsTemplateFile" "Fail to create file, ${zTarget}"
