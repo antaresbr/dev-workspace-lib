@@ -68,13 +68,6 @@ then
   [ $? -ne 0 ] && pcslError "Fail running git-repo"
 fi
 
-if [ -f "${SCRIPT_DIR}/setup.local.env" ]
-then
-  echo ""
-  envVarRead "Load saved post-clone parameters?" "pLoadParams" "default:yes|lower-case|hide-values" "y|yes|n|no"
-  [ "${pLoadParams:0:1}" == "n" ] || wsSourceFile "${SCRIPT_DIR}/setup.local.env"
-fi
-
 wsSourceFile "${SCRIPT_DIR}/setup.local.sh"
 
 fi
