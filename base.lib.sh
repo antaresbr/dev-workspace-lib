@@ -195,7 +195,7 @@ function wsTemplateFile() {
     [ "${ENVIRONMENT+x}" ] && local wEnvironment="${ENVIRONMENT}"
     [ ! "${wEnvironment+x}" ] && local wEnvironment="${pEnvironment}"
     echo "${wVars}" | grep "^ENVIRONMENT=" &> /dev/null
-    [ $? -eq 0 ] || local wVars="${wVars}"$'\n'"ENVIRONMENT=${ENVIRONMENT}"
+    [ $? -eq 0 ] || local wVars="${wVars}"$'\n'"ENVIRONMENT=${wEnvironment}"
   fi
   if [ "${SAIL_USERNAME+x}" ]
   then
