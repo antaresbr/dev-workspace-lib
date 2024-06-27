@@ -256,14 +256,22 @@ function wsCopyFileIfNotExists() {
 
   [ -z "${zTarget}" ] && wsError "wsCopyFileIfNotExists" "Parameter not supplied, zTarget"
 
-  if [ -f "${zTarget}" ]
+  if [ -d "${zTarget}" ]
   then
-    echo "  + already exists : $(realpath "${zTarget}")"
+    [ "${zTarget: -1}" == "/" ] || zTarget="${zTarget}/"
+    local wTarget="${zTarget}$(basename "${zSource}")"
   else
-    cp -v "${zSource}" "${zTarget}"
+    local wTarget="${zTarget}"
+  fi
+
+  if [ -f "${wTarget}" ]
+  then
+    echo "  + already exists : $(realpath "${wTarget}")"
+  else
+    cp -v "${zSource}" "${wTarget}"
     [ $? -ne 0 ] && exit 1
 
-    [ -z "${zMode}" ] || setMode "${zTarget}" "${zMode}"
+    [ -z "${zMode}" ] || setMode "${wTarget}" "${zMode}"
   fi
 }
 
