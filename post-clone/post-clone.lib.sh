@@ -157,8 +157,8 @@ function certifyPath() {
 function sailSetup() {
   wsCreateLink "../.workspace-lib/sail" "sail/lib"
   
-  ENV_SAIL_FILE="sail/.env.sail"
-  templateFile "${ENV_SAIL_FILE}"
+  wsTemplateFile "sail/.env.sail.default" "sail/.example/.env.sail.default.example"
+  wsTemplateFile "sail/.env.sail" "sail/.example/.env.sail.example"
 
   echo ""
   echo "sail/sail shortcut"
