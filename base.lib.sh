@@ -190,12 +190,23 @@ function wsTemplateFile() {
     [ -n "${wVars}" ] && local wVars="${wVars}"$'\n'
     local wVars="${wVars}${zVars}"
   fi
-  echo "${wVars}" | grep "^ENVIRONMENT=" &> /dev/null
-  [ $? -ne 0 ] && local wVars="${wVars}"$'\n'"ENVIRONMENT=${ENVIRONMENT}"
-  echo "${wVars}" | grep "^SAIL_USERNAME=" &> /dev/null
-  [ $? -ne 0 ] && local wVars="${wVars}"$'\n'"SAIL_USERNAME=${SAIL_USERNAME}"
-  echo "${wVars}" | grep "^SAIL_USERID=" &> /dev/null
-  [ $? -ne 0 ] && local wVars="${wVars}"$'\n'"SAIL_USERID=${SAIL_USERID}"
+  if [ "${ENVIRONMENT+x}" ] || [ "${pEnvironment+x}" ]
+  then
+    [ "${ENVIRONMENT+x}" ] && local wEnvironment="${ENVIRONMENT}"
+    [ ! "${wEnvironment+x}" ] && local wEnvironment="${pEnvironment}"
+    echo "${wVars}" | grep "^ENVIRONMENT=" &> /dev/null
+    [ $? -eq 0 ] || local wVars="${wVars}"$'\n'"ENVIRONMENT=${ENVIRONMENT}"
+  fi
+  if [ "${SAIL_USERNAME+x}" ]
+  then
+    echo "${wVars}" | grep "^SAIL_USERNAME=" &> /dev/null
+    [ $? -eq 0 ] || local wVars="${wVars}"$'\n'"SAIL_USERNAME=${SAIL_USERNAME}"
+  fi
+  if [ "${SAIL_USERID+x}" ]
+  then
+    echo "${wVars}" | grep "^SAIL_USERID=" &> /dev/null
+    [ $? -eq 0 ] || local wVars="${wVars}"$'\n'"SAIL_USERID=${SAIL_USERID}"
+  fi
 
   if [ "${zSource:(-8)}" == ".example" ] || [ "${zSource:(-8)}" == "-example" ]
   then
