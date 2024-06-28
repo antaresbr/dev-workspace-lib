@@ -125,7 +125,7 @@ function gitAction() {
   local urlProtocol="${pGitProtocol,,}"
   [ -n "${urlProtocol}" ] || urlProtocol="${GITREPO_URL_PROTOCOL,,}"
   echo "${REPO_LIST}" | grep '{{PROTOCOL}}' &> /dev/null
-  if [ $? -eq 0 ] && [[ "http,https,ssh," != *"${urlProtocol},"* ]]
+  if [ $? -eq 0 ] && [[ ",http,https,ssh," != *",${urlProtocol},"* ]]
   then
     echo ""
     envVarRead "GIT protocol" "urlProtocol" "default:https|required|lower-case" "http|https|ssh"
@@ -155,7 +155,7 @@ function gitAction() {
     [[ "${pipedItem}" == *'|'* ]] || pipedItem="${pipedItem}|"
 
     itemRepoDir="$(echo "${pipedItem}" | cut -d'|' -f1)"
-    itemRepoUrl="$(echo "${pipedItem}" | cut -d'|' -f2 | sed "s/{{PROTOCOL}}/${urlProtocol}/g; s/{{SEP}}/${urlSeparator}/g")"
+    itemRepoUrl="$(echo "${pipedItem}" | cut -d'|' -f2 | sed "s|{{PROTOCOL}}|${urlProtocol}|g; s|{{SEP}}|${urlSeparator}|g")"
     itemRepoBranch="$(echo "${pipedItem}" | cut -d'|' -f3)"
     itemRepoPostClone="$(echo "${pipedItem}" | cut -d'|' -f4-)"
 
