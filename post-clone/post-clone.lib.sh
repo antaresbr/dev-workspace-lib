@@ -82,7 +82,7 @@ function setOwner() {
 }
 
 
-function templateFile() {
+function templateFile_deprecated() {
   local zTarget="$1"
   local zSource="$2"
   local zMode="$3"

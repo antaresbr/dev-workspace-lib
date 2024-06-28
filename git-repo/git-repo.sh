@@ -66,7 +66,17 @@ do
     if [[ "local,develop,release,production,master,main," != *"${pEnvironment},"* ]] || \
        [ -z "${pEnvironment}" ]
     then
-      wsError "Invalid pEnvironment parameter, '${pEnvironment}'"
+      wsError "Invalid environment parameter, '${pEnvironment}'"
+    fi
+  fi
+  if [ "${!p}" == "--git-protocol" ]
+  then
+    pGitProtocol="${@:p+1:1}"
+    set -- "${@:1:p-1}" "${@:p+2}"
+    if [[ "http,https,ssh," != *"${pGitProtocol},"* ]] || \
+       [ -z "${pGitProtocol}" ]
+    then
+      wsError "Invalid git-protocol parameter, '${pGitProtocol}'"
     fi
   fi
 done
@@ -101,7 +111,9 @@ Actions:
 
 Options:
 
-  --environment   Environment: [ local | develop | release | production |master | main ]
+  --environment   Environment: [ local | develop | release | production | master | main ]
+  --git-protocol  Protocol to GIT repositories to replace {{PROTOCOL}} macros in REPO_LIST
+                  Possible values: [ http | https | ssh ]. Default: https
   --post-clone    Run post-clone/setup script
 "
   ;;

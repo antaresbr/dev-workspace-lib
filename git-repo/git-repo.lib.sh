@@ -26,6 +26,7 @@ function grlError() {
 [ -z "${WORKSPACE_BASE_LIB_SH}" ] && grlError "WORKSPACE_BASE_LIB_SH not defined"
 
 wsSourceFile "${WORKSPACE_LIB_DIR}/text.lib.sh"
+wsSourceFile "${WORKSPACE_LIB_DIR}/env-var.lib.sh"
 
 function gitActionClone() {
     if [ -d "${itemRepoDir}" ]
@@ -120,6 +121,24 @@ function gitAction() {
   fi
   [ $# -gt 0 ] && grlError "Too many parameters, $@"
 
+  local urlSeparator=""
+  local urlProtocol="${pGitProtocol,,}"
+  [ -n "${urlProtocol}" ] || urlProtocol="${GITREPO_URL_PROTOCOL,,}"
+  echo "${REPO_LIST}" | grep '{{PROTOCOL}}' &> /dev/null
+  if [ $? -eq 0 ] && [[ "http,https,ssh," != *"${urlProtocol},"* ]]
+  then
+    echo ""
+    envVarRead "GIT protocol" "urlProtocol" "default:https|required|lower-case" "http|https|ssh"
+  fi
+  if [ "${urlProtocol}" == "ssh" ]
+  then
+    urlProtocol="git@"
+    urlSeparator=":"
+  else
+    urlProtocol="${urlProtocol}://"
+    urlSeparator="/"
+  fi
+
   IFS=$'\n'
   for item in ${REPO_LIST}
   do
@@ -136,7 +155,7 @@ function gitAction() {
     [[ "${pipedItem}" == *'|'* ]] || pipedItem="${pipedItem}|"
 
     itemRepoDir="$(echo "${pipedItem}" | cut -d'|' -f1)"
-    itemRepoUrl="$(echo "${pipedItem}" | cut -d'|' -f2)"
+    itemRepoUrl="$(echo "${pipedItem}" | cut -d'|' -f2 | sed "s/{{PROTOCOL}}/${urlProtocol}/g; s/{{SEP}}/${urlSeparator}/g")"
     itemRepoBranch="$(echo "${pipedItem}" | cut -d'|' -f3)"
     itemRepoPostClone="$(echo "${pipedItem}" | cut -d'|' -f4-)"
 
