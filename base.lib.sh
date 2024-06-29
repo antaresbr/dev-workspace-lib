@@ -21,10 +21,10 @@ function wsMsg() {
 }
 
 
-#-- wsLog : Show message prefixed by script name and timestamp
+#-- wsLog : Show message prefixed by timestamp and script name and
 #   parameters
 #     ...  : Texts to show
-function wsMsg() {
+function wsLog() {
   local msgPrefix="$(basename "$0")"
   if [ $# -gt 1 ]
   then
