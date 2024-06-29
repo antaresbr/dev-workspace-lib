@@ -36,6 +36,7 @@ case "${pAction}" in
   'down')
       sailTriggerAction "pre"
       ${COMPOSE_CMD} down $@
+      sailExternalNetworks_down
       sailTriggerAction "pos"
   ;;
   'exec' | 'shell')
@@ -91,6 +92,7 @@ case "${pAction}" in
   ;;
   'up')
       sailTriggerAction "pre"
+      sailExternalNetworks_up
       ${COMPOSE_CMD} up $@
       sailTriggerAction "pos"
   ;;

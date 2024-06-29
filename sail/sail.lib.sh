@@ -53,6 +53,32 @@ function sailAddComposeConfig() {
   done
 }
 
+function sailExternalNetworks_up() {
+  local networks="${SAIL_EXTERNAL_NETWORKS}"
+  [ -n "${networks}" ] || networks="sail-net"
+  local network=""
+  for network in ${networks}
+  do
+    ${DOCKER_BIN} network inspect ${network} &> /dev/null
+    [ $? -eq 0 ] || ${DOCKER_BIN} network create ${network}
+    [ $? -eq 0 ] || sailError "Fail to create network '${network}'"
+  done
+}
+
+function sailExternalNetworks_down() {
+  local networks="${SAIL_EXTERNAL_NETWORKS}"
+  [ -n "${networks}" ] || networks="sail-net"
+  local network=""
+  for network in ${networks}
+  do
+    local netCount="$(${DOCKER_BIN} network inspect ${network} | jq -r '.[0].Containers | length')"
+    if [ $? -eq 0 ] && [ "${netCount}" == "0" ]
+    then
+      ${DOCKER_BIN} network rm ${network}
+    fi
+  done
+}
+
 function sailTriggerAction() {
     local zPhase="$1" && shift
     sailRunIfExists "${SAIL_DIR}/triggers/${zPhase}-${pAction}.sh"
