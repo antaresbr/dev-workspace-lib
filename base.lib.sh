@@ -11,7 +11,27 @@ WORKSPACE_LIB_DIR="$(dirname "${BASH_SOURCE[0]}")"
 #   parameters
 #     ...  : Texts to show
 function wsMsg() {
-  echo "$(basename "$0") | $@"
+  local msgPrefix="$(basename "$0")"
+  if [ $# -gt 1 ]
+  then
+    msgPrefix="${msgPrefix} | $1"
+    shift
+  fi
+  echo "${msgPrefix} | $@"
+}
+
+
+#-- wsLog : Show message prefixed by script name and timestamp
+#   parameters
+#     ...  : Texts to show
+function wsMsg() {
+  local msgPrefix="$(basename "$0")"
+  if [ $# -gt 1 ]
+  then
+    msgPrefix="${msgPrefix} | $1"
+    shift
+  fi
+  echo "$(date '+%Y-%m-%d %H:%M:%S') | ${msgPrefix} | $@"
 }
 
 
