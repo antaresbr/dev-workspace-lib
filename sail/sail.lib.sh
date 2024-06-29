@@ -93,22 +93,19 @@ function sailServiceRunning() {
 sailSourceFile "${SAIL_DIR}/lib/sail.env.sh"
 sailSourceFile "${SAIL_DIR}/project.env.sh"
 
+DOCKER_BIN=$(which docker)
+[ -n "${DOCKER_BIN}" ] || sailError "Impossible to get DOCKER_BIN"
+DOCKER_BIN="docker"
+
 COMPOSE_BIN=$(which docker-compose)
 if [ -n "${COMPOSE_BIN}" ]
 then
   COMPOSE_BIN="docker-compose"
 else
-  COMPOSE_BIN=$(which docker)
-  if [ -n "${COMPOSE_BIN}" ]
-  then
-    COMPOSE_BIN="docker compose"
-    ${COMPOSE_BIN} version &> /dev/null
-    [ $? -ne 0 ] && COMPOSE_BIN=""
-  fi
+  COMPOSE_BIN="${DOCKER_BIN} compose"
+  ${COMPOSE_BIN} version &> /dev/null
+  [ $? -eq 0 ] || COMPOSE_BIN=""
 fi
-if [ -z "${COMPOSE_BIN}" ]
-then
-  sailError "Impossible to get COPOSE_BIN"
-fi
+[ -n "${COMPOSE_BIN}" ] || sailError "Impossible to get COPOSE_BIN"
 
 fi
