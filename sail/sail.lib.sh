@@ -71,7 +71,10 @@ function sailExternalNetworks_down() {
   local network=""
   for network in ${networks}
   do
-    local netCount="$(${DOCKER_BIN} network inspect ${network} | jq -r '.[0].Containers | length')"
+    local netExists="$(${DOCKER_BIN} network ls --format "{{ .Name }}" --filter "name=^${network}\$")"
+    [ "${netExists}" == "${network}" ] || continue
+
+    local netCount="$(${DOCKER_BIN} network inspect ${network} 2> /dev/null | jq -r '.[0].Containers | length')"
     if [ $? -eq 0 ] && [ "${netCount}" == "0" ]
     then
       ${DOCKER_BIN} network rm ${network}
