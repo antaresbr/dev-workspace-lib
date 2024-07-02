@@ -70,7 +70,9 @@ case "${pAction}" in
 
       sailTriggerAction "pre"
       ${COMPOSE_CMD} exec $pUser ${pService} ${zShell} "$@"
-      sailTriggerAction "pos"
+      _ec=$?
+      [ "$_ec" -ne 0 ] || sailTriggerAction "pos"
+      [ "$_ec" -eq 0 ] || exit $_ec
   ;;
   'logs')
       sailTriggerAction "pre"

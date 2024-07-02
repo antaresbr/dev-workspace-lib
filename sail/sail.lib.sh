@@ -84,7 +84,9 @@ function sailExternalNetworks_down() {
 
 function sailTriggerAction() {
     local zPhase="$1" && shift
-    sailRunIfExists "${SAIL_DIR}/triggers/${zPhase}-${pAction}.sh"
+    local action_sh="${SAIL_DIR}/triggers/${zPhase}-${pAction}.sh"
+    sailRunIfExists "${action_sh}"
+    [ $? -ne 0 ] && sailError "sailTriggerAction" "Fail on ${action_sh}"
 }
 
 function sailServiceRunning() {
