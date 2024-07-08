@@ -191,6 +191,9 @@ function sailBuild() {
 
 
 function sailAppExec() {
+  local checkSuccess="${SAIL_EXEC_NO_CHECK_SUCCESS}"
+  [ "${1:0:14}" == "CHECK_SUCCESS=" ] && checkSuccess="${1:14}" && shift
+
   if [ -n "${SAIL_EXEC_APP_USER}" ]
   then
     sail/sail exec --user ${SAIL_EXEC_APP_USER} app $@
@@ -199,10 +202,13 @@ function sailAppExec() {
     sail/sail exec app $@
     local exitCode=$?
   fi
-  if [ $exitCode -ne 0 ] && [ -z "${SAIL_EXEC_NO_CHECK_SUCCESS}" ]
+
+  if [ $exitCode -ne 0 ] && [ "${checkSuccess,,}" != "false" ]
   then
     pclError "sailAppExec" "Failed to run command, sail/sail exec ${sailUser} app $@"
   fi
+
+  return $exitCode
 }
 
 
