@@ -69,6 +69,5 @@ then
 fi
 
 wsSourceFile "${SCRIPT_DIR}/setup.local.sh"
-wsSourceFileIfExists "${SCRIPT_DIR}/setup.local.env.default"
 
 fi

@@ -25,6 +25,11 @@ function pclError() {
 [ -z "${BASE_DIR}" ] && BASE_DIR="$(dirname "${SCRIPT_DIR}")"
 
 
+function pclLoadDefaultParams() {
+  wsSourceFileIfExists "${SCRIPT_DIR}/setup.local.env.default"
+}
+
+
 function pclLoadSavedParams() {
   if [ -f "${SCRIPT_DIR}/setup.local.env" ]
   then
@@ -32,6 +37,11 @@ function pclLoadSavedParams() {
     envVarRead "Load saved post-clone parameters?" "pLoadParams" "default:yes|lower-case|hide-values" "y|yes|n|no"
     [ "${pLoadParams:0:1}" == "n" ] || wsSourceFile "${SCRIPT_DIR}/setup.local.env"
   fi
+}
+
+
+function pclLoadDefaultAndSavedParams() {
+  wsSourceFileIfExists "${SCRIPT_DIR}/setup.local.env.default"
 }
 
 

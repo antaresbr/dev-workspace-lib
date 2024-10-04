@@ -7,6 +7,22 @@ WORKSPACE_BASE_LIB_SH="loaded"
 
 WORKSPACE_LIB_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
+#-- wsCoalesce : Get first not empty value
+#   parameters
+#     ...  : Values
+function wsCoalesce() {
+  local value=""
+  while [ $# -gt 1 ]
+  do
+    value="$1"
+    [ -z "${value}" ] || break
+    shift
+  done
+  [ "${value}" == ":none:" ] && value=""
+  echo -n "${value}"
+}
+
+
 #-- wsMsg : Show message prefixed by script name
 #   parameters
 #     ...  : Texts to show
