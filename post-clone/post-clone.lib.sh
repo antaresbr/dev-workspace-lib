@@ -41,7 +41,10 @@ function pclLoadSavedParams() {
 
 
 function pclLoadDefaultAndSavedParams() {
-  wsSourceFileIfExists "${SCRIPT_DIR}/setup.local.env.default"
+  pclLoadDefaultParams
+  [ $? -eq 0 ] || pclError "pclLoadDefaultAndSavedParams | Fail to pclLoadDefaultParams"
+  pclLoadSavedParams
+  [ $? -eq 0 ] || pclError "pclLoadDefaultAndSavedParams | Fail to pclLoadSavedParams"
 }
 
 
