@@ -12,7 +12,7 @@ WORKSPACE_LIB_DIR="$(dirname "${BASH_SOURCE[0]}")"
 #     ...  : Values
 function wsCoalesce() {
   local value=""
-  while [ $# -gt 1 ]
+  while [ $# -gt 0 ]
   do
     value="$1"
     [ -z "${value}" ] || break
