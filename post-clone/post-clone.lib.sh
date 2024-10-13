@@ -169,9 +169,11 @@ function certifyPath() {
 
 function sailSetup() {
   wsCreateLink "../.workspace-lib/sail" "sail/lib"
+
+  export ENV_SAIL_FILE="sail/.env.sail"
   
   wsTemplateFile "sail/.env.sail.default" "sail/.example/.env.sail.default.example"
-  wsTemplateFile "sail/.env.sail" "sail/.example/.env.sail.example"
+  wsTemplateFile "${ENV_SAIL_FILE}" "sail/.example/.env.sail.example"
 
   echo ""
   echo "sail/sail shortcut"
@@ -183,6 +185,8 @@ function sailSetup() {
   fi
 
   [ "$(type -t localSailSetup)" == "function" ] && localSailSetup
+
+  unset ENV_SAIL_FILE
 }
 
 
