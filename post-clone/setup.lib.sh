@@ -62,7 +62,7 @@ echo "Get SUDO access"
 sudo ls -alF > /dev/null
 [ $? -eq 0 ] || pcslError "Fail to get SUDO access"
 
-if [ -f ".git-repo/git-repo.env.sh" ]
+if [ "${POSTCLONE_IGNORE_GIT_REPO^^}" != "TRUE" ] && [ -f ".git-repo/git-repo.env.sh" ]
 then
   ./git-repo clone --post-clone --environment ${pEnvironment}
   [ $? -ne 0 ] && pcslError "Fail running git-repo"
