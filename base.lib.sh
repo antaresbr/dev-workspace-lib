@@ -51,6 +51,22 @@ function wsLog() {
 }
 
 
+#-- wsInfo : Show info message
+#   parameters
+#     ...  : Texts to show
+function wsInfo() {
+  local msgPrefix="$(basename "$0")"
+  if [ $# -gt 1 ]
+  then
+    msgPrefix="${msgPrefix} | $1"
+    shift
+  fi
+  echo ""
+  echo "${msgPrefix} | INFO | $@"
+  echo ""
+}
+
+
 #-- wsWarn : Show warn message
 #   parameters
 #     ...  : Texts to show
@@ -62,22 +78,8 @@ function wsWarn() {
     shift
   fi
   echo ""
-  echo "${msgPrefix} | WARN: $@"
+  echo "${msgPrefix} | WARN | $@"
   echo ""
-}
-
-
-#-- wsActionWarn : Show an <pAction> warn
-#   parameters
-#     ...  : Texts to show
-function wsActionWarn() {
-  local msgPrefix="action_${pAction}"
-  if [ $# -gt 1 ]
-  then
-    msgPrefix="${msgPrefix} | $1"
-    shift
-  fi
-  wsWarn "${msgPrefix}" "$@"
 }
 
 
@@ -95,6 +97,34 @@ function wsError() {
   echo "${msgPrefix} | ERROR | $@"
   echo ""
   exit 1
+}
+
+
+#-- wsActionInfo : Show an <pAction> info
+#   parameters
+#     ...  : Texts to show
+function wsActionInfo() {
+  local msgPrefix="action_${pAction}"
+  if [ $# -gt 1 ]
+  then
+    msgPrefix="${msgPrefix} | $1"
+    shift
+  fi
+  wsInfo "${msgPrefix}" "$@"
+}
+
+
+#-- wsActionWarn : Show an <pAction> warn
+#   parameters
+#     ...  : Texts to show
+function wsActionWarn() {
+  local msgPrefix="action_${pAction}"
+  if [ $# -gt 1 ]
+  then
+    msgPrefix="${msgPrefix} | $1"
+    shift
+  fi
+  wsWarn "${msgPrefix}" "$@"
 }
 
 
