@@ -164,6 +164,7 @@ text_random () {
   local zLen="$1"
   local zPattern="$2"
 
+  [ -z "$zLen" ] && local zLen="32"
   [ -z "$zPattern" ] && local zPattern="A-Za-z0-9"
   
   echo -n "$(< /dev/urandom tr -dc "${zPattern}" | head --bytes="${zLen}")"
