@@ -288,18 +288,18 @@ function wsTemplateFile() {
       [ $? -ne 0 ] && wsError "wsTemplateFile" "Fail to apply replacement, ${zTarget} : ${varName} => ${varValue}"
     done
     unset IFS
-  else
-    bash -c "${wVars} ; cat << EOF
-$(<${zSource})
-EOF
-"     | tee "${zTarget}" > /dev/null
-    [ $? -ne 0 ] && wsError "wsTemplateFile" "Fail to create file, ${zTarget}"
 
     if [ "$(type -t localTemplateFile)" == "function" ]
     then
       localTemplateFile "${zTarget}"
       [ $? -eq 0 ] || wsError "localTemplateFile" "Fail to template file, ${zTarget}"
     fi
+  else
+    bash -c "${wVars} ; cat << EOF
+$(<${zSource})
+EOF
+" | tee "${zTarget}" > /dev/null
+    [ $? -ne 0 ] && wsError "wsTemplateFile" "Fail to create file, ${zTarget}"
   fi
 }
 
