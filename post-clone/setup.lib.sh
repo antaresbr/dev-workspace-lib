@@ -32,13 +32,13 @@ then
   repoToClone="https://github.com/antaresbr/dev-workspace-lib.git"
   echo ""
   git clone "${repoToClone}" "${WORKSPACE_LIB_DIR}"
-  [ $? -ne 0 ] && pcslError "Failed to clone repository, ${repoToClone}"
+  [ $? -eq 0 ] || pcslError "Failed to clone repository, ${repoToClone}"
 fi
 
 libFile="${WORKSPACE_LIB_DIR}/base.lib.sh"
 [ ! -f "${libFile}" ] && pcslError "File not found: ${libFile}\n"
 source "${libFile}"
-[ $? -ne 0 ] && pcslError "Fail to source file: ${libFile}\n"
+[ $? -eq 0 ] || pcslError "Fail to source file: ${libFile}\n"
 unset libFile
 wsSourceFile "${WORKSPACE_LIB_DIR}/env-var.lib.sh"
 
@@ -55,7 +55,7 @@ pEnvironment="$1" && shift
 [ $# -gt 0 ] && pcslError "Too many parameters, $@"
 
 cd "${BASE_DIR}"
-[ $? -ne 0 ] && pcslError "Fail to access ${BASE_DIR}"
+[ $? -eq 0 ] || pcslError "Fail to access ${BASE_DIR}"
 
 echo ""
 echo "Get SUDO access"
@@ -65,7 +65,7 @@ sudo ls -alF > /dev/null
 if [ "${POSTCLONE_IGNORE_GIT_REPO^^}" != "TRUE" ] && [ -f ".git-repo/git-repo.env.sh" ]
 then
   ./git-repo clone --post-clone --environment ${pEnvironment}
-  [ $? -ne 0 ] && pcslError "Fail running git-repo"
+  [ $? -eq 0 ] || pcslError "Fail running git-repo"
 fi
 
 wsSourceFile "${SCRIPT_DIR}/setup.local.sh"

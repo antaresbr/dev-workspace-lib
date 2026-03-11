@@ -25,7 +25,7 @@ function sailSourceFile() {
 
     [ ! -f "${zFile}" ] && sailError "File not found: ${zFile}"
     source "${zFile}"
-    [ $? -ne 0 ] && sailError "Fail to source file: ${zFile}"
+    [ $? -eq 0 ] || sailError "Fail to source file: ${zFile}"
 }
 
 function sailRunIfExists() {
@@ -85,14 +85,25 @@ function sailExternalNetworks_down() {
 function sailTriggerAction() {
     local zPhase="$1" && shift
     local action_sh="${SAIL_DIR}/triggers/${zPhase}-${pAction}.sh"
+    if [ ! -f "${action_sh}" ]
+    then
+      local altPhase=""
+      case "${zPhase}" in
+        "pre") altPhase="before" ;;
+        "before") altPhase="pre" ;;
+        "pos") altPhase="after" ;;
+        "after") altPhase="pos" ;;
+      esac
+      action_sh="${SAIL_DIR}/triggers/${altPhase}-${pAction}.sh"
+    fi
     sailRunIfExists "${action_sh}"
-    [ $? -ne 0 ] && sailError "sailTriggerAction" "Fail on ${action_sh}"
+    [ $? -eq 0 ] || sailError "sailTriggerAction" "Fail on ${action_sh}"
 }
 
 function sailServiceRunning() {
     local zService="$1"
     ${COMPOSE_CMD} ps "${pService}" &> /dev/null
-    [ $? -ne 0 ] && sailError "Service is not running: ${pService}"
+    [ $? -eq 0 ] || sailError "Service is not running: ${pService}"
 }
 
 sailSourceFile "${SAIL_DIR}/lib/sail.env.sh"

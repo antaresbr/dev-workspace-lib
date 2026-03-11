@@ -27,7 +27,7 @@ function grError() {
 libFile="$(realpath "${GIT_BIN_DIR}/../base.lib.sh")"
 [ ! -f "${libFile}" ] && grError "File not found, ${libFile}"
 source "${libFile}"
-[ $? -ne 0 ] && grError "Fail to source file, ${libFile}"
+[ $? -eq 0 ] || grError "Fail to source file, ${libFile}"
 unset libFile
 
 wsSourceFile "${GIT_BIN_DIR}/git-repo.lib.sh"

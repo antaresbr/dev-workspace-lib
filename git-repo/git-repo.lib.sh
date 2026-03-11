@@ -34,7 +34,7 @@ function gitActionClone() {
       echo "  + already exists"
     else
       mkdir -p "${itemRepoDir}"
-      [ $? -ne 0 ] && grlError "gitActionClone" "Failed to create, ${itemRepoDir}"
+      [ $? -eq 0 ] || grlError "gitActionClone" "Failed to create, ${itemRepoDir}"
       echo "  + created"
     fi
 
@@ -45,10 +45,10 @@ function gitActionClone() {
       echo "  + .git já existe"
     else
       git clone --no-checkout "${itemRepoUrl}" .
-      [ $? -ne 0 ] && grlError "gitActionClone" "Failed to clone repository"
+      [ $? -eq 0 ] || grlError "gitActionClone" "Failed to clone repository"
 
       git checkout "${itemRepoBranch}"
-      [ $? -ne 0 ] && grlError "gitActionClone" "Failed to select branch, ${itemRepoBranch}"
+      [ $? -eq 0 ] || grlError "gitActionClone" "Failed to select branch, ${itemRepoBranch}"
     fi
 
     if [ -n "${pPostClone}" ]
@@ -56,7 +56,7 @@ function gitActionClone() {
       if [ ! -L "post-clone/lib" ] && [ -f "post-clone/setup.sh" ] && [ -f "post-clone/setup.local.sh" ]
       then
         post-clone/setup.sh ${pEnvironment}
-        [ $? -ne 0 ] && grlError "gitActionClone" "Failed to run post-clone/setup"
+        [ $? -eq 0 ] || grlError "gitActionClone" "Failed to run post-clone/setup"
       fi
       if [ -n "${itemRepoPostClone}" ]
       then

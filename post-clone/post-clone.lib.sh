@@ -65,7 +65,7 @@ function setMode() {
   if [ -n "${zMode}" ]
   then
     sudo chmod ${zMode} ${zTarget}
-    [ $? -ne 0 ] && local suffix=" ! falha na ação"
+    [ $? -eq 0 ] || local suffix=" ! falha na ação"
     echo "${prefix}${suffix}"
   fi
 }

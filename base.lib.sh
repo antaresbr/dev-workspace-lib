@@ -277,7 +277,7 @@ function wsTemplateFile() {
   if [ "${zSource:(-8)}" == ".example" ] || [ "${zSource:(-8)}" == "-example" ]
   then
     cp "${zSource}" "${zTarget}"
-    [ $? -ne 0 ] && wsError "wsTemplateFile" "Fail to create file, ${zTarget}"
+    [ $? -eq 0 ] || wsError "wsTemplateFile" "Fail to create file, ${zTarget}"
     IFS=$'\n'
     for varItem in ${wVars}
     do
@@ -285,7 +285,7 @@ function wsTemplateFile() {
       local varValue="$(echo "${varItem}" | cut -d'=' -f 2-)"
       [ -z "${varName}" ] && continue
       sed -i "s/{{${varName}}}/$(echo "${varValue}" | sed 's|/|\\/|g')/g" "${zTarget}"
-      [ $? -ne 0 ] && wsError "wsTemplateFile" "Fail to apply replacement, ${zTarget} : ${varName} => ${varValue}"
+      [ $? -eq 0 ] || wsError "wsTemplateFile" "Fail to apply replacement, ${zTarget} : ${varName} => ${varValue}"
     done
     unset IFS
 
@@ -299,7 +299,7 @@ function wsTemplateFile() {
 $(<${zSource})
 EOF
 " | tee "${zTarget}" > /dev/null
-    [ $? -ne 0 ] && wsError "wsTemplateFile" "Fail to create file, ${zTarget}"
+    [ $? -eq 0 ] || wsError "wsTemplateFile" "Fail to create file, ${zTarget}"
   fi
 }
 
@@ -317,7 +317,7 @@ function wsCertifyPath() {
   if [ ! -d "${zTarget}" ]
   then
     mkdir "${zTarget}"
-    [ $? -ne 0 ] && wsError "wsCertifyPath" "Fail to create directory, ${zTarget}"
+    [ $? -eq 0 ] || wsError "wsCertifyPath" "Fail to create directory, ${zTarget}"
   fi
 
   setMode "${zTarget}" "${zMode}"
@@ -352,7 +352,7 @@ function wsCopyFileIfNotExists() {
     echo "  + already exists : $(realpath "${wTarget}")"
   else
     cp -v "${zSource}" "${wTarget}"
-    [ $? -ne 0 ] && exit 1
+    [ $? -eq 0 ] || exit 1
 
     [ -z "${zMode}" ] || setMode "${wTarget}" "${zMode}"
   fi

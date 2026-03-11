@@ -13,7 +13,7 @@ export APP_DIR
 sailSourceFile="${SAIL_DIR}/lib/sail.lib.sh"
 [ ! -f "${sailSourceFile}" ] && echo "ERROR: File not found: ${sailSourceFile}" && exit 1
 source "${sailSourceFile}"
-[ $? -ne 0 ] && echo "ERROR: Fail to source: ${sailSourceFile}" && exit 1
+[ $? -eq 0 ] || { echo "ERROR: Fail to source: ${sailSourceFile}"; exit 1; }
 
 pAction="$1"
 shift
@@ -24,20 +24,20 @@ COMPOSE_CMD="${COMPOSE_BIN} ${COMPOSE_CONFIGS}"
 
 case "${pAction}" in
   'build')
-      sailTriggerAction "pre"
+      sailTriggerAction "before"
       ${COMPOSE_CMD} build $@
-      sailTriggerAction "pos"
+      sailTriggerAction "after"
   ;;
   'config')
-      sailTriggerAction "pre"
+      sailTriggerAction "before"
       ${COMPOSE_CMD} config $@
-      sailTriggerAction "pos"
+      sailTriggerAction "after"
   ;;
   'down')
-      sailTriggerAction "pre"
+      sailTriggerAction "before"
       ${COMPOSE_CMD} down $@
       sailExternalNetworks_down
-      sailTriggerAction "pos"
+      sailTriggerAction "after"
   ;;
   'exec' | 'shell')
       if [ "$1" == '--user' ]
@@ -68,35 +68,35 @@ case "${pAction}" in
           [ -z "${zShell}" ] && zShell="/bin/bash"
       fi
 
-      sailTriggerAction "pre"
+      sailTriggerAction "before"
       ${COMPOSE_CMD} exec $pUser ${pService} ${zShell} "$@"
       _ec=$?
-      [ "$_ec" -ne 0 ] || sailTriggerAction "pos"
+      [ "$_ec" -ne 0 ] || sailTriggerAction "after"
       [ "$_ec" -eq 0 ] || exit $_ec
   ;;
   'logs')
-      sailTriggerAction "pre"
+      sailTriggerAction "before"
       ${COMPOSE_CMD} logs $@
-      sailTriggerAction "pos"
+      sailTriggerAction "after"
   ;;
   'ps')
-      sailTriggerAction "pre"
+      sailTriggerAction "before"
       ${COMPOSE_CMD} ps $@
-      sailTriggerAction "pos"
+      sailTriggerAction "after"
   ;;
   'restart' | 'rm' | 'start' | 'stop')
       pService="$1"
       [ -z "$pService" ] && sailError "${pAction}: Service not supplied"
 
-      sailTriggerAction "pre"
+      sailTriggerAction "before"
       ${COMPOSE_CMD} ${pAction} ${pService} $@
-      sailTriggerAction "pos"
+      sailTriggerAction "after"
   ;;
   'up')
-      sailTriggerAction "pre"
+      sailTriggerAction "before"
       sailExternalNetworks_up
       ${COMPOSE_CMD} up $@
-      sailTriggerAction "pos"
+      sailTriggerAction "after"
   ;;
   'help' | '--help')
     script=$(basename "$0")
